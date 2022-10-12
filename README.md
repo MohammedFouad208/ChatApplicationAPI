@@ -1,24 +1,59 @@
-# README
+# Chat Application README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+- You Must install docker desktop to run the application
 
-Things you may want to cover:
+# Instructions to Run Application
 
-* Ruby version
+- open cmd
+- run command to build and create images and containers: 
+  docker-compose up
+  
+- run command to migrate database: 
+  docker-compose run --rm app rake db:migrate
+  
+- run command: 
+  docker-compose up
+  
+ ----------------------------------------------------------------------------------------------------------------------------------
+ 
+ # Application end points
+ 
+ - Get all applications: GET '/applications'
+ - Get application: GET '/applications/{token}'
+ - Get application's chats: GET '/applications/{application_token}/chats'
+ - Create new application: POST '/applications'
+   with body : {
+    "application": {
+        "name" : "Application Name"
+    }
+   }
 
-* System dependencies
+-  Update application: PUT '/applications/{token}'
+   with body : {
+    "application": {
+        "name" : "Application Name"
+    }
+   }
+- Delete application: DELETE '/applications/{token}'
 
-* Configuration
+------------------------------------------------------------------------------------------------------------------------------------
+# Chat end points
 
-* Database creation
+ - Get all chats: GET '/chats'
+ - Get chat's messages: GET '/chats/{application_token}/{chat_number}/messages'
+ - Create new chat: POST '/chats/{application_token}'
+ - Delete chat: DELETE '/chats/{application_token}/{chat_number}'
+------------------------------------------------------------------------------------------------------------------------------------
+# Message end points
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+ - Get all messages: GET '/messages'
+ - Search in messages by text: GET '/messages/{application_token}/{chat_number}/{text}/search'
+ - Create new message: POST '/messages'
+   with body : {
+    "message": {
+        "application_token": "token",
+        "chat_number": 1,
+        "body": "message"
+    }
+   }
+ - Delete message: DELETE '/messages/application_token/chat_number/message_number'
