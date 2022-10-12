@@ -1,0 +1,7 @@
+queues:
+- default
+- mailers
+
+:verbose: false
+:concurrency: 5 # Important to set depending on your Redis provider
+:timeout: 20 # Set timeout to 8 on Heroku, longer if you manage your own systems.
