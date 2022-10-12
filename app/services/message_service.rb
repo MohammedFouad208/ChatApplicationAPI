@@ -35,8 +35,9 @@ class MessageService
 
         begin
             chat = Chat.joins(:application).where(applications: {token: application_token}, chats: {number: chat_number}).first
-            response = Message.where(chat_id: chat.id).search value
-            response.records
+            ES.client.create(index: 'messages', type: 'messages', body: {fields: [{ field: 'body' }]})
+            response = ES.client.search(index: 'messages', q: value)
+            return response
         end
     end
 
