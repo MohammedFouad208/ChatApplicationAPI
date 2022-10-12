@@ -2,7 +2,7 @@ require "securerandom"
 
 class ApplicationService
     def get_all
-        Application.all.select(:name, :chats_count, :created_at, :updated_at)
+        Application.all.select(:token, :name, :chats_count, :created_at, :updated_at)
     end
 
     def get_application (token)

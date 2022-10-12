@@ -3,6 +3,18 @@ require 'chat.rb'
 require 'message.rb'
 require 'elasticsearch'
 
+module ES
+    module_function
+  
+    def client
+      @client ||= Elasticsearch::Client.new url: es_url, log: true
+    end
+  
+    def es_url
+      "http://elasticsearch:9200"
+    end
+end
+
 class MessageService
     def get_all
         Message.all.select(
@@ -15,18 +27,21 @@ class MessageService
 
     def search(application_token, chat_number, value)
         begin
-            es_url = "http://elasticsearch:9200"
-            client ||= Elasticsearch::Client.new url: es_url, log: true
-            chat = Chat.joins(:application).where(applications: {token: application_token}, chats: {number: chat_number}).first
-            result = client.search(index: 'messages', body: { body: value, chat_id: chat.id })
-            result.records
-
-            rescue StandardError
-                sleep 2
-                retry
+            try_es_connection
+        rescue StandardError
+            sleep 1
+            retry
         end
-        
-        
+
+        begin
+            chat = Chat.joins(:application).where(applications: {token: application_token}, chats: {number: chat_number}).first
+            response = Message.where(chat_id: chat.id).search value
+            response.records
+        end
+    end
+
+    def try_es_connection
+        ES.client.cluster.health wait_for_status: 'yellow'
     end
 
     def get_last_message_number(chat_id)

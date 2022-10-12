@@ -59,6 +59,10 @@ GEM
       elasticsearch-transport (= 7.17.1)
     elasticsearch-api (7.17.1)
       multi_json
+    elasticsearch-model (7.2.1)
+      activesupport (> 3)
+      elasticsearch (~> 7)
+      hashie
     elasticsearch-transport (7.17.1)
       faraday (~> 1)
       multi_json
@@ -94,6 +98,7 @@ GEM
       raabro (~> 1.4)
     globalid (1.0.0)
       activesupport (>= 5.0)
+    hashie (5.0.0)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     listen (3.1.5)
@@ -209,6 +214,7 @@ DEPENDENCIES
   bunny
   byebug
   elasticsearch
+  elasticsearch-model
   listen (>= 3.0.5, < 3.2)
   mysql2 (>= 0.4.4, < 0.6.0)
   puma (~> 3.11)

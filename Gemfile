@@ -14,9 +14,11 @@ gem 'bunny'
 gem 'sidekiq'
 gem 'sidekiq-scheduler'
 gem 'sinatra', require: nil
-gem 'elasticsearch',
+gem 'elasticsearch-model',
     require: false
 
+gem 'elasticsearch',
+    require: false
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
