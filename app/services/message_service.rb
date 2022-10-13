@@ -2,18 +2,7 @@ require 'application.rb'
 require 'chat.rb'
 require 'message.rb'
 require 'elasticsearch'
-
-module ES
-    module_function
-  
-    def client
-      @client ||= Elasticsearch::Client.new url: es_url, log: true
-    end
-  
-    def es_url
-      "http://elasticsearch:9200"
-    end
-end
+require 'elasticsearch/model'
 
 class MessageService
     def get_all
@@ -33,16 +22,14 @@ class MessageService
             retry
         end
 
-        begin
-            chat = Chat.joins(:application).where(applications: {token: application_token}, chats: {number: chat_number}).first
-            ES.client.create(index: 'messages', type: 'messages', body: {fields: [{ field: 'body' }]})
-            response = ES.client.search(index: 'messages', q: value)
-            return response
-        end
+        chat = Chat.joins(:application).where(applications: {token: application_token}, chats: {number: chat_number}).first
+        response = Message.search query: { bool: { must: [match: { body: value }, match: { chat_id: chat.id }]}  }
+        return response
     end
 
     def try_es_connection
-        ES.client.cluster.health wait_for_status: 'yellow'
+        Elasticsearch::Model.client = Elasticsearch::Client.new(url: "http://elasticsearch:9200", retry_on_failure: 5)
+        Elasticsearch::Model.client.cluster.health wait_for_status: 'yellow'
     end
 
     def get_last_message_number(chat_id)
